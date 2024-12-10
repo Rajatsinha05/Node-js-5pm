@@ -1,7 +1,7 @@
 const Product = require("../models/product.model");
 
 const createProduct = async (req, res) => {
-  console.log(req.file);
+  
 
   if (req.file) {
     req.body.img = req.file.path;
@@ -63,3 +63,5 @@ module.exports = {
   updateProduct,
   deleteProduct,
 };
+
+console.log(__dirname,"controllers");

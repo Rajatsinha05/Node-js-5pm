@@ -2,18 +2,14 @@ const User = require("../models/user.model");
 
 const createUser = async (req, res) => {
   try {
-    const { email } = req.body
-    let isExists = await User.findOne({ email: email })
+    const { email } = req.body;
+    let isExists = await User.findOne({ email: email });
     if (isExists) {
-      return res.send("users already Exists")
-    }
-
-    else {
+      return res.send("users already Exists");
+    } else {
       let user = await User.create(req.body);
       return res.status(201).json(user);
     }
-
-
   } catch (error) {
     res.status(500).json({ error: error });
   }
@@ -57,30 +53,29 @@ const deleteUser = async (req, res) => {
   }
 };
 
-
 const login = async (req, res) => {
-  const { email, password } = req.body
-  let isExists = await User.findOne({ email: email })
+  const { email, password } = req.body;
+  let isExists = await User.findOne({ email: email });
   if (!isExists) {
-    return res.send("user not found")
+    return res.send("user not found");
   }
   if (isExists.password != password) {
-    return res.send("invalid password")
+    return res.send("invalid password");
   }
 
-  return res.send("logged in")
-
-}
-
+  res.cookie("username", isExists.username);
+  return res.send("logged in");
+};
 
 // pages
 const getLoginPage = (req, res) => {
-  res.render("login")
-}
+  res.render("login", {
+    title: "login page",
+  });
+};
 const getSignupPage = (req, res) => {
-  res.render("signup")
-}
-
+  res.render("signup");
+};
 
 module.exports = {
   createUser,
@@ -90,5 +85,5 @@ module.exports = {
   getUserById,
   getLoginPage,
   getSignupPage,
-  login
+  login,
 };

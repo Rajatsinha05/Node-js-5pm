@@ -8,10 +8,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "view/form.html"));
 });
+
+
 app.use("/products", productRoute);
+console.log(__dirname,"index");
+
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
