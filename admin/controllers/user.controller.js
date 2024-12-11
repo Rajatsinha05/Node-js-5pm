@@ -64,6 +64,7 @@ const login = async (req, res) => {
   }
 
   res.cookie("username", isExists.username);
+  res.cookie("userId", isExists.id);
   return res.send("logged in");
 };
 
