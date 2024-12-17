@@ -1,12 +1,16 @@
 const User = require("../models/user.model");
 
+const bcrypt = require("bcrypt");
+
 const createUser = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
     let isExists = await User.findOne({ email: email });
     if (isExists) {
       return res.send("users already Exists");
     } else {
+      let hash = await bcrypt.hash(password, 10);
+      req.body.password = hash;
       let user = await User.create(req.body);
       return res.status(201).json(user);
     }
@@ -59,10 +63,12 @@ const login = async (req, res) => {
   if (!isExists) {
     return res.send("user not found");
   }
-  if (isExists.password != password) {
+
+  const isMatched = await bcrypt.compare(password, isExists.password);
+
+  if (!isMatched) {
     return res.send("invalid password");
   }
-
   res.cookie("username", isExists.username);
   res.cookie("userId", isExists.id);
   return res.send("logged in");
@@ -70,9 +76,7 @@ const login = async (req, res) => {
 
 // pages
 const getLoginPage = (req, res) => {
-  res.render("login", {
-    title: "login page",
-  });
+  res.render("login");
 };
 const getSignupPage = (req, res) => {
   res.render("signup");
