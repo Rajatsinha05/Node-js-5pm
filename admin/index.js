@@ -27,8 +27,8 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", isLoggedIn, (req, res) => {
-  let { username } = req.cookies;
-  res.render("index", { username });
+
+  res.render("index");
 });
 app.use("/user", userRouter);
 app.use("/products", productRoute);

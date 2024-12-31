@@ -34,5 +34,4 @@ const initializer = (passport) => {
   });
 };
 
-
 module.exports = initializer;

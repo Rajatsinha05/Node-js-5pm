@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 
 const bcrypt = require("bcrypt");
+const sendingMail = require("../services/mailService");
 
 const createUser = async (req, res) => {
   try {
@@ -82,6 +83,20 @@ const getSignupPage = (req, res) => {
   res.render("signup");
 };
 
+// superadmin
+const getAdmins = async (req, res) => {
+  let admins = await User.find({ role: "admin", isVerified: false });
+  res.send(admins);
+};
+
+// send mail
+
+const sendMail = async (req, res) => {
+  const { to, subject, content } = req.body;
+  await sendingMail(to, subject, content);
+  res.send("mail to: " + to);
+};
+
 module.exports = {
   createUser,
   getUser,
@@ -91,4 +106,6 @@ module.exports = {
   getLoginPage,
   getSignupPage,
   login,
+  getAdmins,
+  sendMail
 };

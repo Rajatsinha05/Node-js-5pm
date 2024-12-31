@@ -8,11 +8,15 @@ const {
   getLoginPage,
   getSignupPage,
   login,
+  getAdmins,
+  sendMail,
 } = require("../controllers/user.controller");
 const passport = require("passport");
+const { isLoggedIn } = require("../middlewares/isLogin");
+const { isSuperadmin } = require("../middlewares/role");
 
 const userRouter = Router();
-
+userRouter.get("/admin-list", isLoggedIn, isSuperadmin, getAdmins);
 // pages
 userRouter.get("/login", getLoginPage);
 userRouter.get("/signup", getSignupPage);
@@ -22,7 +26,20 @@ userRouter.post("/", createUser);
 userRouter.patch("/:userId", updateUser);
 userRouter.delete("/:userId", deleteUser);
 // userRouter.post("/login", login);
-userRouter.post("/login", passport.authenticate("local"),(req,res)=>{
-  res.send("logged in");
-});
+userRouter.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/user/login",
+    successRedirect: "/",
+  })
+);
+
+// super admins routes
+
+
+
+// mail routes
+
+userRouter.post("/mail",sendMail)
+
 module.exports = userRouter;
