@@ -4,7 +4,7 @@ const transport = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "kalathiyaneel02@gmail.com",
-    pass: process.env.password,
+    pass: "zrxb koce wfbd xqjq",
   },
 });
 
@@ -17,7 +17,7 @@ const sendingMail = async (to, subject, content) => {
       html: content,
     };
     let res = await transport.sendMail(mailOptions);
-    console.log(res);
+    // console.log(res);
   } catch (error) {
     console.log(error.message);
   }

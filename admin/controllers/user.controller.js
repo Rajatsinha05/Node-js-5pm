@@ -97,6 +97,48 @@ const sendMail = async (req, res) => {
   res.send("mail to: " + to);
 };
 
+// otp send mail
+
+let otps = new Map();
+
+const sendOtp = async (req, res) => {
+  const { email } = req.body;
+  console.log(req.body, email);
+
+  let isExists = await User.findOne({ email: email });
+  if (!isExists) {
+    return res.send("user not found");
+  }
+  try {
+    let otp = Math.round(Math.random() * 1000000);
+    otps.set(otp, email);
+    console.log(otps);
+
+    let html = `<h1>OTP : ${otp}</h1>`;
+    await sendingMail(email, "password reset", html);
+    res.redirect("/user/reset-password");
+  } catch (error) {
+    res.send(error.message);
+  }
+};
+
+const verifyOtp = async (req, res) => {
+  const { otp, password } = req.body;
+  console.log(req.body);
+  console.log(otps);
+
+  let data = otps.get(Number(otp));
+  console.log(data);
+  if (!data) {
+    res.send("Invalid OTP ");
+  }
+  let user = await User.findOne({ email: data });
+  //  hash password
+  user.password = //hashPassword
+    await user.save();
+  res.send("password reseting...");
+};
+
 module.exports = {
   createUser,
   getUser,
@@ -107,5 +149,11 @@ module.exports = {
   getSignupPage,
   login,
   getAdmins,
-  sendMail
+  sendMail,
+  sendOtp,
+  verifyOtp,
 };
+
+// let test = new Map();
+// test.set(100, "testing");
+// console.log(test.get("100"));
