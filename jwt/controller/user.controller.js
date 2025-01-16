@@ -40,3 +40,35 @@ exports.getAllUsers = async (req, res) => {
     res.status(404).send({ msg: "failed to get users", error: error });
   }
 };
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  let isUserExists = await User.findOne({ email });
+  if (!isUserExists) {
+    return res.send({ msg: "user not found" });
+  }
+
+  let isPasswordMatch = await bcrypt.compare(password, isUserExists.password);
+  if (!isPasswordMatch) {
+    return res.send({ msg: "password mismatch" });
+  }
+  let token = await jwt.sign(
+    {
+      email: isUserExists.email,
+      id: isUserExists.id,
+      username: isUserExists.username,
+    },
+    process.env.jwt_secret
+  );
+
+
+  res.json({
+    msg: "logged in ...",
+    user: {
+      email: isUserExists.email,
+      id: isUserExists.id,
+      username: isUserExists.username,
+    },
+    token,
+  });
+};
