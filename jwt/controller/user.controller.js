@@ -20,6 +20,7 @@ exports.createUser = async (req, res) => {
           email: user.email,
           id: user.id,
           username: user.username,
+          role: user.role
         },
         process.env.jwt_secret
       );
@@ -57,6 +58,7 @@ exports.login = async (req, res) => {
       email: isUserExists.email,
       id: isUserExists.id,
       username: isUserExists.username,
+      role: isUserExists.role
     },
     process.env.jwt_secret
   );

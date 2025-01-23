@@ -24,7 +24,7 @@ exports.delete = async (req, res) => {
   res.send(food);
 };
 exports.getAll = async (req, res) => {
-  let foods = await Food.find();
+  let foods = await Food.find().populate("userId");
   res.send(foods);
 };
 
